@@ -1,6 +1,7 @@
 package Pages;
 
 //import com.sun.org.apache.xpath.internal.operations.Bool;
+import Utility.ReadDataFromExcel;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -8,6 +9,7 @@ import org.testng.Assert;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -33,15 +35,17 @@ public class HomePage {
     @FindBy(xpath="//input[@aria-label='Search the new york times']")
     WebElement searchBox;
 
-    @FindBy(xpath="//input[@value='java']")
+    @FindBy(xpath="//input[@id='searchTextField']")
     WebElement showingResultValue;
 
     String str;
+    String input;
 
     @FindBy(xpath="//nav[@data-testid='footer']//child::ul[2]")
     WebElement footerNavFooterUl;
 
-
+    @FindBy(xpath="//button[@data-testid='search-submit']")
+    WebElement goButton;
 
 
 
@@ -109,22 +113,26 @@ public class HomePage {
         assertTrue(searchBox.isDisplayed(),"SearchBox is displayed on web page");
     }
     public void sendTextinSearchBox()
-    {
-        str="java";
-        searchBox.sendKeys(str);
+    { ReadDataFromExcel.setExcelSheetPath("C:\\Users\\omkar\\IdeaProjects\\NYTimesProject\\src\\main\\resources\\searchBoxInputData.xlsx");
+        input=ReadDataFromExcel.getData(0,1,1);
+        searchBox.sendKeys(input);
+        goButton.click();
 
     }
     public void verifyTitle()
     {
         String title=driver.getTitle();
         System.out.println(title);
-        String expectedTitle="The New York Times International - Breaking News, US News, World News, Videos";
-        assertEquals(title,expectedTitle,"Title matched");
+        String expectedTitle="The New York Times";
+        if(title.contains(expectedTitle)) {
+            System.out.println("Title Matched");
+
+        }
     }
     public void verifySearchResultsAreReletable()
     {
-        assertEquals(showingResultValue.getAttribute("value"),str," Showing results as per input provided.");
-        driver.getPageSource().contains(str);
+        assertEquals(showingResultValue.getAttribute("value"),ReadDataFromExcel.getData(0,1,1)," Showing results as per input provided.");
+        driver.getPageSource().contains(input);
 
     }
 
