@@ -5,9 +5,12 @@ import Utility.ReadDataFromExcel;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -16,6 +19,7 @@ import static org.testng.Assert.assertTrue;
 
 public class HomePage {
     WebDriver driver;
+    WebDriverWait wait;
     @FindBy(xpath="//a[@aria-label='New York Times homepage' and @class='css-1qcrlqu eoab3xr0']")
     WebElement header;
 
@@ -113,7 +117,8 @@ public class HomePage {
         assertTrue(searchBox.isDisplayed(),"SearchBox is displayed on web page");
     }
     public void sendTextinSearchBox()
-    { ReadDataFromExcel.setExcelSheetPath("C:\\Users\\omkar\\IdeaProjects\\NYTimesProject\\src\\main\\resources\\searchBoxInputData.xlsx");
+    {
+        ReadDataFromExcel.setExcelSheetFileName("searchBoxInputData.xlsx");
         input=ReadDataFromExcel.getData(0,1,1);
         searchBox.sendKeys(input);
         goButton.click();
@@ -145,8 +150,9 @@ public class HomePage {
 
     public List<WebElement> getLoadedFooter()
     {
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//nav[@data-testid='footer']//child::ul[2]")));
         List<WebElement> footerNavLis = footerNavFooterUl.findElements(By.tagName("li"));
-
         return footerNavLis;
 
     }
@@ -188,8 +194,9 @@ public class HomePage {
             if (footerNavLis.get(i).getText().equals("Subscriptions"))
             {
                 WebElement li = footerNavLis.get(i);
+                wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='css-jq1cx6' and text()='Subscriptions']")));
                 WebElement a = li.findElement(By.tagName("a"));
-
                 a.click();
 
             }

@@ -17,10 +17,11 @@ public class ReadDataFromExcel {
     static XSSFSheet sheet;
     static XSSFWorkbook xssfWorkbook;
 
-    public static void setExcelSheetPath(String excelPath) {
+    public static void setExcelSheetFileName(String excelFIleName) {
 
         try {
-            File src = new File(excelPath);
+            testDataExcelPath=currentDir+"\\src\\main\\resources\\"+ excelFIleName;
+            File src = new File(testDataExcelPath);
             FileInputStream fis = new FileInputStream(src);
             xssfWorkbook = new XSSFWorkbook(fis);
 
